@@ -50,7 +50,7 @@ public class BreadthFirstSearch {
 		metrics.set("StartTime", System.currentTimeMillis());
 		if (Solution.check(initialState)){
 			metrics.set("TotalCost", 0);
-			metrics.set("nodesOnStack", 0);
+			metrics.set("nodesOnFrontier", 0);
 			Solution.write(initialState, initialState, metrics, explored);
 			
 		} else {
@@ -58,7 +58,7 @@ public class BreadthFirstSearch {
 			frontier = new LinkedList<Node>();
 			explored = new Hashtable<String,Node>();
 			frontier.add(initialState);
-			metrics.set("nodesOnStack", 1);
+			metrics.set("nodesOnFrontier", 1);
 			
 			
 			while(!frontier.isEmpty()){
@@ -76,8 +76,8 @@ public class BreadthFirstSearch {
 								
 						} else {
 						frontier.add(child);
-						if(frontier.size() > metrics.getInt("nodesOnStack"))
-							metrics.set("nodesOnStack", frontier.size());
+						if(frontier.size() > metrics.getInt("nodesOnFrontier"))
+							metrics.set("nodesOnFrontier", frontier.size());
 						}
 					}
 				}
