@@ -2,6 +2,7 @@ package EightPuzz.framework;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Hashtable;
 
 public final class Solution {
 	
@@ -15,8 +16,8 @@ public final class Solution {
 				return false;
 		
 	}
-	
-	public static void write(Node solution, Node root, Metrics metrics){
+
+	public static void write(Node solution, Node root, Metrics metrics, Hashtable<String, Node> explored) {
 		/*
 		 * Gather the solution into a "stack" by moving up from goal node to parent,
 		 * then printing the solution and stats.
@@ -24,11 +25,12 @@ public final class Solution {
 			System.out.println("***FOUND SOLUTION***");
 			Deque<Node> solutionStack = new ArrayDeque<Node>();
 			solutionStack.addFirst(solution);
-			Node currentNode = solution.getParent();
+			Node currentNode = explored.get(solution.getParent());
 			while(currentNode.hashCode() != root.hashCode()){
 				solutionStack.addFirst(currentNode);
-				currentNode = currentNode.getParent();
+				currentNode = explored.get(currentNode.getParent());
 			}
+			solutionStack.addFirst(root);
 			
 			metrics.set("PathLength", solutionStack.size());
 			metrics.set("TotalCost", solution.getPathCost());
@@ -51,7 +53,7 @@ public final class Solution {
 			System.out.println("Time in ms: " + 
 					(Long.parseLong(metrics.get("EndTime"))
 					- Long.parseLong(metrics.get("StartTime"))));
-			System.out.println("Nodes explored: " + metrics.get("NodesExplored"));
+			System.out.println("Nodes explored: " + explored.size());
 			System.out.println("Space: " + metrics.get("nodesOnStack"));
 		
 	}

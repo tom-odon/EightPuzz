@@ -34,7 +34,8 @@ public class DepthFirstSearch {
 		int[] tiles = new int[BOARD_SIZE * BOARD_SIZE];
 		for(int i = 0; i < args.length; i++)
 			tiles[i] = Integer.parseInt(args[i]);
-			root = new Node(tiles);
+		
+		root = new Node(tiles);
 
 		DFS(root);
 	}
@@ -45,7 +46,7 @@ public class DepthFirstSearch {
 		if (Solution.check(initialState)){
 			metrics.set("TotalCost", 0);
 			metrics.set("nodesOnStack", 0);
-			Solution.write(initialState, initialState, metrics);
+			Solution.write(initialState, initialState, metrics, explored);
 			
 		} else {
 			
@@ -65,13 +66,10 @@ public class DepthFirstSearch {
 					
 						if(Solution.check(current)) {
 							metrics.set("NodesExplored", explored.size());
-							Solution.write(current, initialState, metrics);
+							Solution.write(current, initialState, metrics, explored);
 							return;
 					
 						} else {
-							System.out.println(current.getTileConfig()
-									+ ", " + current.getAction().getMove()
-									+ ", " + current.getAction().getCost());
 							
 							List<Node> children = current.getChildren();
 							int i = 0;

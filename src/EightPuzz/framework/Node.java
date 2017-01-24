@@ -12,17 +12,17 @@ import java.util.List;
 public class Node{
 	private final int BOARD_SIZE = 3;
 	private int[][] state;
-	private Node parent;                                               
+	private int parent;                                               
 	private Action action;
 	private double pathCost;
 	
 	/*
 	 * Class constructor.
 	 */
-	public Node(Node parent, Action action, int[][] state)  {
+	public Node(int parent, double cost, Action action, int[][] state)  {
 		this.parent = parent;
 		this.action = action;
-		this.pathCost = parent.pathCost + action.getCost();
+		this.pathCost = cost + action.getCost();
 		this.state = state;
 		//this.state = generateState(parent, action);
 	}
@@ -42,7 +42,7 @@ public class Node{
 			}
 		}
 		this.state = tiles;
-		this.parent = null;
+		this.parent = -1;
 		this.action = new Action("none", 0);
 		this.pathCost = 0;
 	}
@@ -73,7 +73,7 @@ public class Node{
 			leftTiles[x][y] = val;
 			leftTiles[x][y + 1] = 0;
 			Action leftAction = new Action("left", val);
-			Node left = new Node(this, leftAction, leftTiles);
+			Node left = new Node(this.hashCode(), this.pathCost, leftAction, leftTiles);
 			children.add(left);
 		}
 		
@@ -84,7 +84,7 @@ public class Node{
 			rightTiles[x][y] = val;
 			rightTiles[x][y - 1] = 0;
 			Action rightAction = new Action("right", val);
-			Node right = new Node(this, rightAction, rightTiles);
+			Node right = new Node(this.hashCode(), this.pathCost, rightAction, rightTiles);
 			children.add(right);
 		}
 		
@@ -95,7 +95,7 @@ public class Node{
 			upTiles[x][y] = val;
 			upTiles[x + 1][y] = 0;
 			Action upAction = new Action("up", val);
-			Node up = new Node(this, upAction, upTiles);
+			Node up = new Node(this.hashCode(), this.pathCost, upAction, upTiles);
 			children.add(up);
 			
 		}
@@ -106,7 +106,7 @@ public class Node{
 			downTiles[x][y] = val;
 			downTiles[x - 1][y] = 0;
 			Action downAction = new Action("down", val);
-			Node down = new Node(this, downAction, downTiles);
+			Node down = new Node(this.hashCode(), this.pathCost, downAction, downTiles);
 			children.add(down);
 			
 		}
@@ -114,8 +114,8 @@ public class Node{
 		return children;
 	}
 
-	public Node getParent() {
-		return parent;
+	public String getParent() {
+		return Integer.toString(parent);
 	}
 
 	public Action getAction() {

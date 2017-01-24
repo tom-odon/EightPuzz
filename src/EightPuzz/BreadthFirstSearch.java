@@ -31,10 +31,17 @@ public class BreadthFirstSearch {
 	}
 	
 	public void BFS(String[] args) throws Exception{
+		System.out.println("Executing: Breadth First Search");
 		int[] tiles = new int[BOARD_SIZE * BOARD_SIZE];
 		for(int i = 0; i < args.length; i++)
 			tiles[i] = Integer.parseInt(args[i]);
 			root = new Node(tiles);
+		
+		switch(tiles[0]){
+		case 1: System.out.println("Level: EASY"); break;
+		case 2: System.out.println("Level: MEDIUM"); break;
+		case 5: System.out.println("Level: HARD"); break;
+		}
 		BFS(root);
 	}
 	
@@ -44,7 +51,7 @@ public class BreadthFirstSearch {
 		if (Solution.check(initialState)){
 			metrics.set("TotalCost", 0);
 			metrics.set("nodesOnStack", 0);
-			Solution.write(initialState, initialState, metrics);
+			Solution.write(initialState, initialState, metrics, explored);
 			
 		} else {
 			
@@ -59,17 +66,14 @@ public class BreadthFirstSearch {
 				explored.put((Integer.toString(current.hashCode())),current);
 				List<Node> children = current.getChildren(); 
 				for(Node child : children){
-					//NewNode child = new NewNode(current, action);
-					
-					System.out.println(child.getTileConfig() + ", " + child.getAction().getMove()
-							+ ", " + child.getAction().getCost());
 					
 					if(!(explored.containsKey(Integer.toString(child.hashCode())) || 
 					   frontier.contains(child))) {
-						if(Solution.check(child)) {
-							metrics.set("NodesExplored", explored.size());
-							Solution.write(child, initialState, metrics);
-							return;
+							if(Solution.check(child)) {
+								metrics.set("NodesExplored", explored.size());
+								Solution.write(child, initialState, metrics, explored);
+								return;
+								
 						} else {
 						frontier.add(child);
 						if(frontier.size() > metrics.getInt("nodesOnStack"))
