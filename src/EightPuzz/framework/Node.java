@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class Node{
+public class Node implements Comparable<Node> {
 	private final int BOARD_SIZE = 3;
 	private int[][] state;
 	private int parent;                                               
@@ -66,7 +66,7 @@ public class Node{
 		//try each possible action, L R U D
 		int val;
 		List<Node> children = new LinkedList<Node>();
-		if((x < BOARD_SIZE) && (x >= 0 ) && (y < BOARD_SIZE - 1) && (y >= 0)){
+		if((x < BOARD_SIZE) && (x >= 0 ) && (y < BOARD_SIZE - 1) && (y >= 0)) {
 			int[][] leftTiles = copyState();
 				
 			val = leftTiles[x][y + 1];
@@ -77,7 +77,7 @@ public class Node{
 			children.add(left);
 		}
 		
-		if((x < BOARD_SIZE) && (x >= 0 ) && (y < BOARD_SIZE) && (y > 0)){
+		if((x < BOARD_SIZE) && (x >= 0 ) && (y < BOARD_SIZE) && (y > 0)) {
 			int[][] rightTiles = copyState();
 			
 			val = rightTiles[x][y - 1];
@@ -88,7 +88,7 @@ public class Node{
 			children.add(right);
 		}
 		
-		if((x < BOARD_SIZE - 1) && (x >= 0) && (y < BOARD_SIZE) && (y >= 0)){ 
+		if((x < BOARD_SIZE - 1) && (x >= 0) && (y < BOARD_SIZE) && (y >= 0)) { 
 			int[][] upTiles = copyState();
 			
 			val = upTiles[x + 1][y];
@@ -99,7 +99,7 @@ public class Node{
 			children.add(up);
 			
 		}
-		if((x < BOARD_SIZE) && (x > 0) && (y < BOARD_SIZE) && (y >= 0)){
+		if((x < BOARD_SIZE) && (x > 0) && (y < BOARD_SIZE) && (y >= 0)) {
 			int[][] downTiles = copyState();
 		
 			val = downTiles[x - 1][y];
@@ -129,7 +129,7 @@ public class Node{
 	/*
 	 * Returns a string representation of the tile configuration
 	 */
-	public String getTileConfig(){
+	public String getTileConfig() {
 		StringBuilder sb = new StringBuilder();
 		int x = 0, y = 0;
 		for(x = 0; x < BOARD_SIZE; x++){
@@ -146,7 +146,7 @@ public class Node{
 	 * Hashcode overridden to reflect the board's goal state.
 	 */
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		int hash = 0;
 		int exponent = 8;
 		int x = 0, y = 0;
@@ -176,6 +176,10 @@ public class Node{
 		    newState[i] = state[i].clone();
 		
 		return newState;
+	}
+	
+	public int compareTo(Node o) {
+		return Double.compare(this.action.cost(), o.action.cost());
 	}
 
 
