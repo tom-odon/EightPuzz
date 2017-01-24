@@ -45,7 +45,7 @@ public class DepthFirstSearch {
 		metrics.set("StartTime", System.currentTimeMillis());
 		if (Solution.check(initialState)){
 			metrics.set("TotalCost", 0);
-			metrics.set("nodesOnStack", 0);
+			metrics.set("nodesOnFrontier", 0);
 			Solution.write(initialState, initialState, metrics, explored);
 			
 		} else {
@@ -53,7 +53,7 @@ public class DepthFirstSearch {
 			frontier = new ArrayDeque<Node>();
 			explored = new Hashtable<String,Node>();
 			frontier.addFirst(initialState);
-			metrics.set("nodesOnStack", 1);
+			metrics.set("nodesOnFrontier", 1);
 						
 			while(frontier.peekFirst() != null) {
 				Node current = frontier.removeFirst();
@@ -75,8 +75,8 @@ public class DepthFirstSearch {
 							int i = 0;
 							while(i < children.size()) {
 									frontier.addFirst(children.get(i));
-								if(frontier.size() > metrics.getInt("nodesOnStack"))
-									metrics.set("nodesOnStack", frontier.size());
+								if(frontier.size() > metrics.getInt("nodesOnFrontier"))
+									metrics.set("nodesOnFrontier", frontier.size());
 								i++;
 							}					
 						}

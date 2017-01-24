@@ -54,7 +54,10 @@ public final class Solution {
 					(Long.parseLong(metrics.get("EndTime"))
 					- Long.parseLong(metrics.get("StartTime"))));
 			System.out.println("Nodes explored: " + explored.size());
-			System.out.println("Space: " + metrics.get("nodesOnStack"));
+			System.out.println("Space: " + metrics.get("nodesOnFrontier"));
 		
 	}
+
+
+		
 }

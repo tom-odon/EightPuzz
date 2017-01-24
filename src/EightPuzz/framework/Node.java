@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class Node implements Comparable<Node> {
+public class Node {
 	private final int BOARD_SIZE = 3;
 	private int[][] state;
 	private int parent;                                               
@@ -177,11 +177,16 @@ public class Node implements Comparable<Node> {
 		
 		return newState;
 	}
-	
-	public int compareTo(Node o) {
-		return Double.compare(this.action.cost(), o.action.cost());
+
+	public int compareTo(Node other) {
+		if(this.getPathCost() < other.getPathCost())
+			return -1;
+		
+		if(this.getPathCost() > other.getPathCost())
+			return 1;
+		
+		return 0;
 	}
-
-
+	
 	
 }
