@@ -1,6 +1,7 @@
 package EightPuzz;
 
 import java.util.ArrayDeque;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -15,10 +16,12 @@ import EightPuzz.framework.Node;
 import EightPuzz.framework.Solution;
 
 /*
- * Class for Breadth-First-Search of Eight Puzzle problem.
+ * Class for Breadth-First-Search of Eight Puzzle problem. All nodes at a given
+ * depth are expanded before any deeper nodes are expanded. 
  */
 public class BreadthFirstSearch {
 
+	//class variables
 	private static final int BOARD_SIZE = 3;
 	
 	private Metrics metrics;
@@ -26,12 +29,13 @@ public class BreadthFirstSearch {
 	private Queue<Node> frontier;
 	private Node root;
 	
-	public BreadthFirstSearch(){
-		
+	//empty constructor
+	public BreadthFirstSearch(){	
 	}
 	
+	//driver class that forms initial board, and calls the worker method.
 	public void BFS(String[] args) throws Exception{
-		System.out.println("Executing: Breadth First Search");
+		System.out.println("Executing: Best First Search");
 		int[] tiles = new int[BOARD_SIZE * BOARD_SIZE];
 		for(int i = 0; i < args.length; i++)
 			tiles[i] = Integer.parseInt(args[i]);
@@ -45,6 +49,12 @@ public class BreadthFirstSearch {
 		BFS(root);
 	}
 	
+	/*
+	 * Worker method: checks root for solution, then enters into main algorithm: 
+	 * While the frontier is not empty, load it with a node's children. If a 
+	 * child has not in the explored set or on the frontier, check for a solution
+	 * and return. Otherwise, place it on the frontier for expansion.
+	 */
 	private void BFS(Node initialState) throws Exception{
 		metrics = new Metrics();
 		metrics.set("StartTime", System.currentTimeMillis());
@@ -96,5 +106,7 @@ public class BreadthFirstSearch {
 		BreadthFirstSearch bfs = new BreadthFirstSearch();
 		bfs.BFS(args);
 	}
-
+	
 }
+
+	
