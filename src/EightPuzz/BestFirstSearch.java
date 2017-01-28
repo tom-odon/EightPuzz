@@ -1,41 +1,41 @@
 package EightPuzz;
 
-import java.util.ArrayDeque;
 import java.util.Comparator;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
 
-import EightPuzz.framework.Action;
 import EightPuzz.framework.Metrics;
 import EightPuzz.framework.Node;
 import EightPuzz.framework.Solution;
 
 /*
- * Class for Breadth-First-Search of Eight Puzzle problem. All nodes at a given
- * depth are expanded before any deeper nodes are expanded. 
+ * Implementation of the greedy Best First Search algorithm, which uses a heuristic
+ * defined as the number of tiles that are not in the correct position. Nodes are 
+ * expanded based on the lowest number of out-of-place tiles.
  */
-public class BreadthFirstSearch {
+public class BestFirstSearch {
 
 	//class variables
 	private static final int BOARD_SIZE = 3;
 	
 	private Metrics metrics;
-	private Hashtable<String,Node> explored;
-	private Queue<Node> frontier;
+	private HashSet<Node> explored;
+	private Hashtable<String, Node> exploredTable;
+	private HashSet<Node> frontier;
+	private PriorityQueue<Node> frontierQ;
 	private Node root;
 	
 	//empty constructor
-	public BreadthFirstSearch(){	
+	public BestFirstSearch(){	
 	}
 	
 	//driver class that forms initial board, and calls the worker method.
 	public void BFS(String[] args) throws Exception{
-		System.out.println("Executing: Best First Search");
+		System.out.println("Executing: Breadth First Search");
 		int[] tiles = new int[BOARD_SIZE * BOARD_SIZE];
 		for(int i = 0; i < args.length; i++)
 			tiles[i] = Integer.parseInt(args[i]);
@@ -61,31 +61,40 @@ public class BreadthFirstSearch {
 		if (Solution.check(initialState)){
 			metrics.set("TotalCost", 0);
 			metrics.set("nodesOnFrontier", 0);
-			Solution.write(initialState, initialState, metrics, explored);
+			Solution.write(initialState, initialState, metrics, exploredTable);
 			
 		} else {
 			
-			frontier = new LinkedList<Node>();
-			explored = new Hashtable<String,Node>();
-			frontier.add(initialState);
-			metrics.set("nodesOnFrontier", 1);
+			Comparator<Node> comparator = new BestFSComparator();
+			frontierQ = new PriorityQueue<Node>(10, comparator);
+			frontier = new HashSet<Node>();
+			explored = new HashSet<Node>();
+			exploredTable = new Hashtable<String, Node>();
 			
+			addToFrontier(initialState);
 			
 			while(!frontier.isEmpty()){
-				Node current = frontier.remove();
-				explored.put((Integer.toString(current.hashCode())),current);
+				Node current = frontierQ.poll();
+				frontier.remove(current);
+				
+				addToExplored(current);
+				System.out.println("CURRENT: " + current.getTileConfig());
+				
 				List<Node> children = current.getChildren(); 
 				for(Node child : children){
 					
-					if(!(explored.containsKey(Integer.toString(child.hashCode())) || 
-					   frontier.contains(child))) {
+					System.out.println("CHILD: " + child.getTileConfig());
+					
+					if(!(explored.contains(child)) || 
+					   frontier.contains(child)) {
+						
 							if(Solution.check(child)) {
 								metrics.set("NodesExplored", explored.size());
-								Solution.write(child, initialState, metrics, explored);
+								Solution.write(child, initialState, metrics, exploredTable);
 								return;
 								
 						} else {
-						frontier.add(child);
+						addToFrontier(child);
 						if(frontier.size() > metrics.getInt("nodesOnFrontier"))
 							metrics.set("nodesOnFrontier", frontier.size());
 						}
@@ -95,7 +104,15 @@ public class BreadthFirstSearch {
 		}
 	}
 	
+	public void addToFrontier(Node node){
+		frontier.add(node); 
+		frontierQ.add(node);
+	}
 	
+	public void addToExplored(Node node){
+		explored.add(node);
+		exploredTable.put((Integer.toString(node.hashCode())), node);
+	}
 	
 	/*
 	 * Main entry point of application, takes in an array of 9 integers representing
@@ -103,10 +120,25 @@ public class BreadthFirstSearch {
 	 * a node for the problem and then the BFS worker method is called.
 	 */
 	public static void main(String[] args) throws Exception {
-		BreadthFirstSearch bfs = new BreadthFirstSearch();
+		BestFirstSearch bfs = new BestFirstSearch();
 		bfs.BFS(args);
 	}
-	
 }
 
+/*
+ * Comparator to evaluate the number of tiles out of place of each node, essential 
+ * for the implementation of the priority queue. 
+ */
+class BestFSComparator implements Comparator<Node>{
 	
+	@Override
+	public int compare(Node x, Node y) {
+		if(x.outOfPlace() < y.outOfPlace())	
+			return -1;
+		
+		if(x.outOfPlace() > y.outOfPlace())
+			return 1;
+		
+		return 0;
+	}
+}

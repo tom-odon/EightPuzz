@@ -111,6 +111,10 @@ public class UniformCostSearch {
 
 }
 
+/*
+ * Comparator to evaluate the number of nodes out of place, essential for the
+ * implementation of the priority queue. 
+ */
 class UCSComparator implements Comparator<Node>{
 	
 	@Override

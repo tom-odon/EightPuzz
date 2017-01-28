@@ -188,5 +188,18 @@ public class Node {
 		return 0;
 	}
 	
+	public int outOfPlace(){
+		int count = 0;
+		if (this.state[0][0] != 1) count++;
+		if (this.state[0][1] != 2) count++;
+		if (this.state[0][2] != 3) count++;
+		if (this.state[1][0] != 8) count++;
+		if (this.state[1][1] != 0) count++;
+		if (this.state[1][2] != 4) count++;
+		if (this.state[2][0] != 7) count++;
+		if (this.state[2][1] != 6) count++;
+		if (this.state[2][2] != 5) count++;
+		return count;
+	}
 	
 }
