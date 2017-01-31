@@ -21,7 +21,6 @@ public class BestFirstSearch {
 
 	//class variables
 	private static final int BOARD_SIZE = 3;
-	
 	private Metrics metrics;
 	private HashSet<Node> explored;
 	private Hashtable<String, Node> exploredTable;
@@ -73,6 +72,7 @@ public class BestFirstSearch {
 			
 			addToFrontier(initialState);
 			
+			//Main loop
 			while(!frontier.isEmpty()){
 				Node current = frontierQ.poll();
 				frontier.remove(current);
@@ -104,11 +104,13 @@ public class BestFirstSearch {
 		}
 	}
 	
+	//Adds a node to the Frontier hash table and queue.
 	public void addToFrontier(Node node){
 		frontier.add(node); 
 		frontierQ.add(node);
 	}
 	
+	//Adds a node to the Explored hashtable and set.
 	public void addToExplored(Node node){
 		explored.add(node);
 		exploredTable.put((Integer.toString(node.hashCode())), node);

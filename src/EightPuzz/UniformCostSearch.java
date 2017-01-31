@@ -13,10 +13,16 @@ import EightPuzz.framework.Metrics;
 import EightPuzz.framework.Node;
 import EightPuzz.framework.Solution;
 
+/*
+ * Uniform cost search expands the node with the lowest path cost next, of g(n).
+ * It uses a priority queue to maintain order of the lowest path cost. It also
+ * checks for a solution when a node is selected for expansion, instead of when
+ *  it is first created.
+ */
 public class UniformCostSearch {
 
+	//class variables
 	private static final int BOARD_SIZE = 3;
-	
 	private Metrics metrics;
 	private HashSet<Node> explored;
 	private Hashtable<String, Node> exploredTable;
@@ -24,10 +30,12 @@ public class UniformCostSearch {
 	private PriorityQueue<Node> frontierQ;
 	private Node root;
 	
+	//empty class constructor
 	public UniformCostSearch(){
 		
 	}
 	
+	//driver class that forms initial board, and calls the worker method.
 	public void UCS(String[] args) throws Exception{
 		System.out.println("Executing: Uniform Cost Search");
 		int[] tiles = new int[BOARD_SIZE * BOARD_SIZE];
@@ -43,6 +51,7 @@ public class UniformCostSearch {
 		UCS(root);
 	}
 	
+	//Main worker method. Checks goal state and then enters main loop.
 	private void UCS(Node initialState) throws Exception{
 		metrics = new Metrics();
 		metrics.set("StartTime", System.currentTimeMillis());
@@ -63,7 +72,7 @@ public class UniformCostSearch {
 			
 			metrics.set("nodesOnFrontier", 1);
 			
-			
+			//Main loop.
 			while(!frontier.isEmpty()){
 				Node current = frontierQ.poll();
 				frontier.remove(current);
@@ -92,11 +101,13 @@ public class UniformCostSearch {
 		}
 	}
 	
+	//Adds a node to the Frontier hash table and queue.
 	public void addToFrontier(Node node){
 		frontier.add(node); 
 		frontierQ.add(node);
 	}
 	
+	//Adds a node to the Explored hash table and set.
 	public void addToExplored(Node node){
 		explored.add(node);
 		exploredTable.put((Integer.toString(node.hashCode())), node);

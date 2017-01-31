@@ -8,7 +8,7 @@ package EightPuzz.framework;
 import java.util.LinkedList;
 import java.util.List;
 
-
+//Instance variables.
 public class Node {
 	private final int BOARD_SIZE = 3;
 	private int[][] state;
@@ -17,7 +17,9 @@ public class Node {
 	private double pathCost;
 	
 	/*
-	 * Class constructor.
+	 * Class constructor. Parent int represents the hashCode of the parent node.
+	 * Cost is the total path cost leading to this node. Action represents a 
+	 * move cost and direction. State is the new-formed state after taking the Action.
 	 */
 	public Node(int parent, double cost, Action action, int[][] state)  {
 		this.parent = parent;
@@ -63,7 +65,10 @@ public class Node {
 			}
 		}
 		
-		//try each possible action, L R U D
+		/*
+		 * Tries to form each possible action, Left Right Up Down.
+		 * If the action is possible, creates a child node representing that action.
+		 */
 		int val;
 		List<Node> children = new LinkedList<Node>();
 		if((x < BOARD_SIZE) && (x >= 0 ) && (y < BOARD_SIZE - 1) && (y >= 0)) {
@@ -114,14 +119,17 @@ public class Node {
 		return children;
 	}
 
+	//Return the string representation of the parent node.
 	public String getParent() {
 		return Integer.toString(parent);
 	}
 
+	//Returns both move and move cost.
 	public Action getAction() {
 		return action;
 	}
 
+	//Total path cost, not child move cost.
 	public double getPathCost() {
 		return pathCost;
 	}
@@ -159,6 +167,11 @@ public class Node {
 		return hash;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * Overrides the standard equals() method by comparing hashcodes.
+	 */
 	@Override
 	public boolean equals(Object other){
 		if (other == null)
@@ -170,6 +183,7 @@ public class Node {
 		return false;
 	}
 	
+	//Copies the state of the tiles for node creation.
 	private int[][] copyState(){
 		int [][] newState = new int[state.length][];
 		for(int i = 0; i < state.length; i++)
@@ -178,6 +192,7 @@ public class Node {
 		return newState;
 	}
 
+	//Bad comparison method.
 	public int compareTo(Node other) {
 		if(this.getPathCost() < other.getPathCost())
 			return -1;
@@ -188,6 +203,10 @@ public class Node {
 		return 0;
 	}
 	
+	/*
+	 * Iterate through all tiles and increment a running total if the given tile
+	 * is not in its goal state location. Return the total.
+	 */
 	public int outOfPlace(){
 		int count = 0;
 		if (this.state[0][0] != 1) count++;
@@ -200,6 +219,27 @@ public class Node {
 		if (this.state[2][1] != 6) count++;
 		if (this.state[2][2] != 5) count++;
 		return count;
+	}
+
+	/*
+	 * Iterate through all tiles, and for each one calculate the distance in
+	 * tiles from its goal state place. Return the sum of all distances.
+	 */
+	public double manhattanSum() {
+		int manhattan = 0;
+		
+		int[] xGoal = {1,0,0,0,1,2,2,2,1};
+		int[] yGoal = {1,0,1,2,2,2,1,0,0};
+				
+		for(int x = 0; x < BOARD_SIZE; x++){
+			for(int y = 0; y < BOARD_SIZE; y++){
+				int tile = this.state[x][y];
+				manhattan += Math.abs(xGoal[tile] - x);
+				manhattan += Math.abs(yGoal[tile] - y);
+			}
+		}
+		
+		return manhattan;
 	}
 	
 }
