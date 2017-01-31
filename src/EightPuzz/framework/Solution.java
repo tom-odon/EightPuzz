@@ -4,10 +4,14 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Hashtable;
 
+/*
+ * Class for evaluation and printing of solutions. 
+ */
 public final class Solution {
 	
 	/*
-	 * Checks for a valid solution
+	 * Checks for a valid solution by evaluating the hashcode of the goal state 
+	 * against a given node.
 	 */
 	public static boolean check(Node current){
 			if(current.hashCode() == 123804765)
@@ -17,15 +21,20 @@ public final class Solution {
 		
 	}
 
+	/*
+	 * Writes a solution to command-line output by taking in a given node, its root,
+	 * the metrics of the algorithm run, and the explored hashtable from the run.
+	 */
 	public static void write(Node solution, Node root, Metrics metrics, Hashtable<String, Node> explored) {
+		
 		/*
 		 * Gather the solution into a "stack" by moving up from goal node to parent,
 		 * then printing the solution and stats.
 		 */
-			System.out.println("***FOUND SOLUTION***");
 			Deque<Node> solutionStack = new ArrayDeque<Node>();
 			solutionStack.addFirst(solution);
 			Node currentNode = explored.get(solution.getParent());
+			
 			while(currentNode.hashCode() != root.hashCode()){
 				solutionStack.addFirst(currentNode);
 				currentNode = explored.get(currentNode.getParent());
@@ -46,8 +55,7 @@ public final class Solution {
 			
 			//stats
 			metrics.set("EndTime", System.currentTimeMillis());
-			
-			
+						
 			System.out.println("Path length: " + metrics.get("PathLength"));
 			System.out.println("Path cost: " + metrics.get("TotalCost"));
 			System.out.println("Time in ms: " + 

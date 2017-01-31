@@ -15,21 +15,24 @@ import EightPuzz.framework.Node;
 import EightPuzz.framework.Solution;
 
 /*
- * Class for Breadth-First-Search of Eight Puzzle problem.
+ * Class for Depth-First-Search of Eight Puzzle problem. It expands the deepest node
+ * in the current frontier. It utilizes a LIFO queue as opposed to Breadth First's FIFO.
  */
 public class DepthFirstSearch {
 
+	//class variables
 	private static final int BOARD_SIZE = 3;
-	
 	private Metrics metrics;
 	private Hashtable<String,Node> explored;
 	private Deque<Node> frontier;
 	private Node root;
 	
+	//General constructor.
 	public DepthFirstSearch(){
 		
 	}
 	
+	//driver class that forms initial board, and calls the worker method.
 	public void DFS(String[] args) throws Exception{
 		int[] tiles = new int[BOARD_SIZE * BOARD_SIZE];
 		for(int i = 0; i < args.length; i++)
@@ -40,6 +43,12 @@ public class DepthFirstSearch {
 		DFS(root);
 	}
 	
+	/*
+	 * Worker method: checks root for solution, then enters into main algorithm: 
+	 * While the frontier is not empty, load it with a node's children via FIFO queue. If a 
+	 * child has not in the explored set or on the frontier, check for a solution
+	 * and return. Otherwise, place it on the frontier for expansion.
+	 */
 	private void DFS(Node initialState) throws Exception {
 		metrics = new Metrics();
 		metrics.set("StartTime", System.currentTimeMillis());
@@ -54,7 +63,8 @@ public class DepthFirstSearch {
 			explored = new Hashtable<String,Node>();
 			frontier.addFirst(initialState);
 			metrics.set("nodesOnFrontier", 1);
-						
+			
+			//Main loop
 			while(frontier.peekFirst() != null) {
 				Node current = frontier.removeFirst();
 				
@@ -96,7 +106,7 @@ public class DepthFirstSearch {
 	/*
 	 * Main entry point of application, takes in an array of 9 integers representing
 	 * the 8 tiles, from left to right, top to bottom. The array is configured into
-	 * a node for the problem and then the BFS worker method is called.
+	 * a node for the problem and then the DFS worker method is called.
 	 */
 	public static void main(String[] args) throws Exception {
 		DepthFirstSearch dfs = new DepthFirstSearch();

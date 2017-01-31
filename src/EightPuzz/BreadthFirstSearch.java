@@ -17,13 +17,12 @@ import EightPuzz.framework.Solution;
 
 /*
  * Class for Breadth-First-Search of Eight Puzzle problem. All nodes at a given
- * depth are expanded before any deeper nodes are expanded. 
+ * depth are expanded before any deeper nodes are expanded. Uses FIFO queue.
  */
 public class BreadthFirstSearch {
 
 	//class variables
 	private static final int BOARD_SIZE = 3;
-	
 	private Metrics metrics;
 	private Hashtable<String,Node> explored;
 	private Queue<Node> frontier;
@@ -70,7 +69,7 @@ public class BreadthFirstSearch {
 			frontier.add(initialState);
 			metrics.set("nodesOnFrontier", 1);
 			
-			
+			//Main worker method.
 			while(!frontier.isEmpty()){
 				Node current = frontier.remove();
 				explored.put((Integer.toString(current.hashCode())),current);
